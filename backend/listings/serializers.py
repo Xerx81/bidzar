@@ -4,6 +4,8 @@ from .models import Listing
 
 
 class ListingsSerializer(serializers.ModelSerializer):
+    seller = serializers.ReadOnlyField(source="seller.username")
+
     class Meta:
         model = Listing
-        fields = '__all__'
+        fields = "__all__"

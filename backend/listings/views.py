@@ -7,11 +7,10 @@ from .serializers import ListingsSerializer
 class ListingListCreateView(generics.ListCreateAPIView):
     queryset = Listing.objects.all()
     serializer_class = ListingsSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-    def get_permissions(self):
-        if self.request.method == "GET":
-            return [permissions.AllowAny()]
-        return [permissions.IsAuthenticated()]
+    def perform_create(self, serializer):
+        serializer.save(seller=self.request.user)
 
 
 class ListingDetailView(generics.RetrieveUpdateDestroyAPIView):
