@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from .views import api_root
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),  # Enables browsable API login
+    path('api/v1/', api_root, name='api-root'),
     path('api/v1/', include('listings.urls')),
     path('api/v1/auth/', include('accounts.urls')),
 ]
