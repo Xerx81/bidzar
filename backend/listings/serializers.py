@@ -4,8 +4,22 @@ from .models import Listing
 
 
 class ListingsSerializer(serializers.HyperlinkedModelSerializer):
-    seller = serializers.ReadOnlyField(source="seller.username")
+    seller = serializers.HyperlinkedRelatedField(
+        view_name="user-detail",
+        lookup_field="username",
+        read_only=True
+    )
 
     class Meta:
         model = Listing
-        fields = ["url", "id", "title", "price", "description", "image_url", "active", "created_at", "seller"]
+        fields = [
+            "url",
+            "id",
+            "title",
+            "price",
+            "description",
+            "image_url",
+            "active",
+            "created_at",
+            "seller"
+        ]

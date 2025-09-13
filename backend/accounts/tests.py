@@ -41,7 +41,7 @@ class AuthTests(TestCase):
         self.client = APIClient()
         self.register_url = "/api/v1/auth/register/"
         self.login_url = "/api/v1/auth/login/"
-        self.me_url = "/api/v1/auth/me/"
+        self.user_detail_url = "/api/v1/auth/testuser/"
 
     def test_register(self):
         data = {
@@ -69,21 +69,22 @@ class AuthTests(TestCase):
         self.assertIn("access", response.data)
         self.assertIn("refresh", response.data)
 
-    def test_me_endpoint(self):
+    def test_user_detail_endpoint(self):
         User.objects.create_user(
             username="testuser",
             email="testuser@email.com",
             password="testpass123"
         )
-        data = {
-            "username": "testuser",
-            "password": "testpass123"
-        }
-        response = self.client.post(self.login_url, data, format="json")
-        access_token = response.data["access"]
-
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
-        response = self.client.get(self.me_url)
+        # data = {
+        #     "username": "testuser",
+        #     "password": "testpass123"
+        # }
+        # response = self.client.post(self.login_url, data, format="json")
+        # access_token = response.data["access"]
+        #
+        # self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+        response = self.client.get(self.user_detail_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["username"], "testuser")
         self.assertEqual(response.data["email"], "testuser@email.com")
+        self.assertIn("listings", response.data)
