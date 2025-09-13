@@ -3,9 +3,9 @@ from rest_framework import serializers
 from .models import Listing
 
 
-class ListingsSerializer(serializers.ModelSerializer):
+class ListingsSerializer(serializers.HyperlinkedModelSerializer):
     seller = serializers.ReadOnlyField(source="seller.username")
 
     class Meta:
         model = Listing
-        fields = "__all__"
+        fields = ["url", "id", "title", "price", "description", "image_url", "active", "created_at", "seller"]
