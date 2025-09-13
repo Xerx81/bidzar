@@ -6,8 +6,6 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-
     listings = serializers.HyperlinkedRelatedField(
         many=True,
         view_name="listing-detail",
@@ -15,11 +13,14 @@ class UserSerializer(serializers.ModelSerializer):
         lookup_field="pk"
     )
 
+    email = serializers.EmailField(write_only=False, required=False)
+
     class Meta:
         model = User
         fields = ["url","id", "username", "email", "password", "listings"]
         extra_kwargs = {
-            "url": {"view_name": "user-detail", "lookup_field": "username"}
+            "url": {"view_name": "user-detail", "lookup_field": "username"},
+            "password": {"write_only": True}
         }
 
     def create(self, validated_data):
@@ -29,3 +30,11 @@ class UserSerializer(serializers.ModelSerializer):
             password=validated_data["password"],
         )
         return user
+
+    def to_representation(self, instance):
+        # Only show email if the looged in user is the same as profile owner
+        data = super().to_representation(instance)
+        request = self.context.get("request")
+        if request and request.user != instance:
+            data.pop("email")
+        return data

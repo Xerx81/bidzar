@@ -75,16 +75,22 @@ class AuthTests(TestCase):
             email="testuser@email.com",
             password="testpass123"
         )
-        # data = {
-        #     "username": "testuser",
-        #     "password": "testpass123"
-        # }
-        # response = self.client.post(self.login_url, data, format="json")
-        # access_token = response.data["access"]
-        #
-        # self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+        data = {
+            "username": "testuser",
+            "password": "testpass123"
+        }
+        response = self.client.post(self.login_url, data, format="json")
+        access_token = response.data["access"]
+
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
         response = self.client.get(self.user_detail_url)
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["username"], "testuser")
         self.assertEqual(response.data["email"], "testuser@email.com")
         self.assertIn("listings", response.data)
+
+        # Test unauthorized access
+        self.client.credentials(HTTP_AUTHORIZATION="")
+        response = self.client.get(self.user_detail_url)
+        self.assertNotIn("email", response.data)
