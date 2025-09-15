@@ -10,7 +10,6 @@ class UserSerializer(serializers.ModelSerializer):
         many=True,
         view_name="listing-detail",
         read_only=True,
-        lookup_field="pk"
     )
 
     email = serializers.EmailField(write_only=False, required=False)
