@@ -3,7 +3,7 @@ from rest_framework import serializers
 from .models import Listing
 
 
-class ListingsSerializer(serializers.HyperlinkedModelSerializer):
+class ListingSerializer(serializers.HyperlinkedModelSerializer):
     seller = serializers.HyperlinkedRelatedField(
         view_name="user-detail",
         lookup_field="username",
@@ -21,5 +21,5 @@ class ListingsSerializer(serializers.HyperlinkedModelSerializer):
             "image_url",
             "active",
             "created_at",
-            "seller"
+            "seller",
         ]

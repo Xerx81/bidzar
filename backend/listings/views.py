@@ -1,13 +1,13 @@
 from rest_framework import generics, permissions
 
 from .models import Listing
-from .serializers import ListingsSerializer
+from .serializers import ListingSerializer
 from .permissions import IsSellerOrReadOnly
 
 
 class ListingListCreateView(generics.ListCreateAPIView):
     queryset = Listing.objects.all()
-    serializer_class = ListingsSerializer
+    serializer_class = ListingSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def perform_create(self, serializer):
@@ -16,5 +16,5 @@ class ListingListCreateView(generics.ListCreateAPIView):
 
 class ListingDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Listing.objects.all()
-    serializer_class = ListingsSerializer
+    serializer_class = ListingSerializer
     permission_classes = [IsSellerOrReadOnly]
